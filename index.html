@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Birthday, Ko Mahen</title>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root { --accent: #E9A93A; --cream: #F1E8D6; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; color: var(--cream);
+  font-family: 'Playfair Display', Georgia, serif;
+  background-color: #0E0506;
+  background-image:
+    radial-gradient(ellipse at 50% 42%, rgba(150,40,52,.32), rgba(0,0,0,.72) 78%),
+    repeating-linear-gradient(90deg, #0E0506 0 18px, #2B0A0E 18px 22px);
+  background-attachment: fixed;
+}
+.stage { min-height: 100vh; padding: 36px 16px 44px; display: flex; flex-direction: column; align-items: center; gap: 28px; overflow: hidden; }
+header { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.date { font-size: 14px; letter-spacing: .28em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: 0; font-family: 'Pinyon Script', cursive; font-weight: 400; font-size: clamp(44px, 7vw, 76px); line-height: 1.05; }
+.sub { margin: 0; font-style: italic; font-size: 16px; color: #D9CDB6; }
+
+/* BUKU */
+.wrap { position: relative; width: min(100%, 940px); aspect-ratio: 2000 / 1410; touch-action: pan-y; }
+.book { position: absolute; top: 0; left: 0; width: 100%; height: 100%; perspective: 2600px; transition: transform .9s cubic-bezier(.45,.05,.25,1); }
+.leaf { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; transform-origin: left center; transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.45,.05,.25,1), z-index 0s linear .45s; }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 14px 36px rgba(0,0,0,.55); }
+.face.back { transform: rotateY(180deg); }
+.face button { display: block; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; background: #1A0709; cursor: pointer; }
+.face img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, rgba(0,0,0,.38), rgba(0,0,0,0) 9%); }
+.face.back::after { background: linear-gradient(to left, rgba(0,0,0,.38), rgba(0,0,0,0) 9%); }
+
+/* Mode HP: satu halaman per layar */
+.wrap.narrow { width: min(100%, 460px); aspect-ratio: 1000 / 1410; overflow: hidden; }
+.wrap.narrow .book { width: 200%; }
+
+/* KONTROL */
+.controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px 24px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; font: 700 16px 'Playfair Display', Georgia, serif;
+  border-radius: 999px; border: 2px solid var(--accent); cursor: pointer; color: var(--cream); background: transparent; }
+.btn.primary { color: #1A0709; background: var(--accent); }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn:focus-visible { outline: 3px solid var(--cream); outline-offset: 3px; }
+.info { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 170px; font-size: 15px; }
+.dots { display: flex; gap: 6px; align-items: center; }
+.dot { width: 8px; height: 8px; border-radius: 4px; background: rgba(241,232,214,.28); transition: width .3s, background .3s; }
+.dot.on { width: 22px; background: var(--accent); }
+footer { font-family: 'Pinyon Script', cursive; font-size: 30px; color: var(--accent); text-align: center; }
+
+/* ====== ANIMASI ====== */
+.stage { position: relative; }
+header, .bookzone, .controls, footer { position: relative; z-index: 1; }
+header { animation: rise .9s ease both; }
+.controls { animation: rise .9s ease .6s both; }
+footer { animation: rise .9s ease .9s both; }
+.bookzone { width: 100%; display: flex; justify-content: center; animation: bookIn 1.1s cubic-bezier(.22,1,.36,1) .35s both; }
+.bookzone .wrap { animation: floaty 7s ease-in-out 1.6s infinite; }
+.glow { position: absolute; left: 50%; top: 50%; width: 90%; height: 80%; margin: -40% 0 0 -45%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(233,169,58,.28), rgba(233,169,58,0)); filter: blur(10px); animation: glow 5s ease-in-out infinite; }
+.title-wrap { position: relative; display: inline-block; }
+.sparkle { position: absolute; fill: var(--accent); animation: twinkle 2.6s ease-in-out infinite; }
+.hearts { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.heart { position: absolute; bottom: -40px; opacity: 0; animation: drift 18s linear infinite; }
+.btn { transition: transform .2s ease, box-shadow .2s ease; }
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,.4); }
+.btn:active:not(:disabled) { transform: translateY(0) scale(.97); }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes bookIn { from { opacity: 0; transform: translateY(30px) scale(.94) rotate(-1.5deg); } to { opacity: 1; transform: none; } }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes glow { 0%,100% { opacity: .55; transform: scale(1); } 50% { opacity: .95; transform: scale(1.05); } }
+@keyframes drift { 0% { transform: translate3d(0,0,0) rotate(0); opacity: 0; } 10% { opacity: .55; } 85% { opacity: .35; } 100% { transform: translate3d(36px,-115vh,0) rotate(45deg); opacity: 0; } }
+@keyframes twinkle { 0%,100% { opacity: .25; transform: scale(.7) rotate(0); } 50% { opacity: 1; transform: scale(1.1) rotate(20deg); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<main class="stage">
+  <div class="hearts" id="hearts" aria-hidden="true"></div>
+  <header>
+    <div class="date">17 November</div>
+    <div class="title-wrap">
+      <h1>Happy Birthday, Ko Mahen</h1>
+      <svg class="sparkle" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" style="left:-6px;top:-4px"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>
+      <svg class="sparkle" aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" style="right:-4px;top:6px;fill:#F1E8D6;animation-duration:3.1s;animation-delay:.8s"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>
+      <svg class="sparkle" aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" style="right:24%;bottom:-4px;animation-duration:2.2s;animation-delay:1.4s"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>
+    </div>
+    <p class="sub">Balik halamannya satu per satu</p>
+  </header>
+
+  <div class="bookzone">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="wrap" id="wrap"><div class="book" id="book"></div></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="prev" type="button">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      <span>Sebelumnya</span>
+    </button>
+    <div class="info"><div id="counter"></div><div class="dots" id="dots"></div></div>
+    <button class="btn primary" id="next" type="button">
+      <span>Berikutnya</span>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+
+  <footer>With love, Ervina</footer>
+</main>
+<audio id="bgm" src="audio/song.mp3" loop preload="auto"></audio>
+
+<script>
+/* ====== EDIT DI SINI: urutan halaman (1 = sampul, lalu berpasangan) ====== */
+const PAGES = [
+  { src: 'images/1.jpg',  alt: 'Sampul: Happy Birthday 30, My Beloved' },
+  { src: 'images/2.jpg',  alt: "Kalender November, tanggal 17: It's Ko Mahen day" },
+  { src: 'images/3.jpg',  alt: 'A little celebration for the one I adore: foto polaroid berdua waktu kecil' },
+  { src: 'images/4.jpg',  alt: 'The Day My Favorite Person Was Born: kolase foto dari kecil sampai sekarang' },
+  { src: 'images/5.jpg',  alt: 'Surat Happy Birthday, The Love of My Life, di dalam amplop hijau' },
+  { src: 'images/6.jpg',  alt: 'My Birthday Boy: kolase foto berdua dan surat singkat' },
+  { src: 'images/7.jpg',  alt: 'Wishes for You: ucapan dan harapan' },
+  { src: 'images/8.jpg',  alt: "B'day Boy: kolase foto wajah-wajah lucu" },
+  { src: 'images/9.jpg',  alt: 'Strip foto masa kecil berdua, Happy birthday once again, my dearest' },
+  { src: 'images/10.jpg', alt: 'Penutup: The universe had its own beautiful way... With Love, Ervina' }
+];
+/* ========================================================================= */
+
+const TOTAL = PAGES.length;            // jumlah halaman
+const LEAVES = Math.ceil(TOTAL / 2);   // tiap lembar = 2 sisi (depan + belakang)
+const $ = (id) => document.getElementById(id);
+const wrap = $('wrap'), book = $('book');
+let p = 1;                              // halaman aktif (1..TOTAL)
+let narrow = window.innerWidth < 720;   // HP: satu halaman per layar
+
+/* Bangun lembar-lembar buku */
+const leafEls = [];
+for (let i = 1; i <= LEAVES; i++) {
+  const leaf = document.createElement('div');
+  leaf.className = 'leaf';
+  [[PAGES[2 * i - 2], 'front', goNext], [PAGES[2 * i - 1], 'back', goBack]].forEach(([page, side, handler]) => {
+    const face = document.createElement('div');
+    face.className = 'face' + (side === 'back' ? ' back' : '');
+    if (page) {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.tabIndex = -1;
+      const img = document.createElement('img');
+      img.src = page.src; img.alt = page.alt; img.draggable = false;
+      btn.appendChild(img);
+      btn.addEventListener('click', handler);
+      face.appendChild(btn);
+    }
+    leaf.appendChild(face);
+  });
+  book.appendChild(leaf);
+  leafEls.push(leaf);
+}
+
+/* Titik-titik indikator */
+for (let i = 1; i <= TOTAL; i++) { const d = document.createElement('div'); d.className = 'dot'; $('dots').appendChild(d); }
+
+/* Musik: browser memblokir suara otomatis, jadi lagu mulai saat tombol Berikutnya (atau halaman) pertama kali ditekan */
+const bgm = $('bgm');
+let musicStarted = false;
+function autoStartMusic() {
+  if (musicStarted) return;
+  musicStarted = true;
+  const pr = bgm.play();
+  if (pr && pr.catch) pr.catch(() => { musicStarted = false; });
+}
+
+/* Hati melayang di latar (dekorasi) */
+const HEART = '<svg viewBox="0 0 24 24" width="100%" height="100%"><path d="M12 20.5s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.8a4.3 4.3 0 0 1 7.5 2.7c0 5.4-7.5 10-7.5 10z"/></svg>';
+[[6,24,16,0,'#E9A93A'],[16,18,19,3,'#D96C6C'],[27,30,22,6,'#F1E8D6'],[38,20,17,1.5,'#E9A93A'],[52,26,21,9,'#D96C6C'],
+ [63,16,15,4.5,'#F1E8D6'],[74,28,20,7.5,'#E9A93A'],[85,20,18,2,'#D96C6C'],[93,22,23,11,'#F1E8D6']].forEach(([left, size, dur, delay, color]) => {
+  const h = document.createElement('div');
+  h.className = 'heart'; h.innerHTML = HEART;
+  h.style.cssText = 'left:' + left + '%;width:' + size + 'px;height:' + size + 'px;fill:' + color + ';animation-duration:' + dur + 's;animation-delay:' + delay + 's';
+  $('hearts').appendChild(h);
+});
+
+/* Navigasi */
+function goNext() {
+  if (p >= TOTAL) return;
+  autoStartMusic();
+  p = Math.min(TOTAL, narrow ? p + 1 : 2 * (Math.floor(p / 2) + 1));
+  render();
+}
+function goPrev() {
+  if (p <= 1) return;
+  if (narrow) p = p - 1;
+  else { const f = Math.floor(p / 2) - 1; p = f <= 0 ? 1 : 2 * f; }
+  render();
+}
+function goBack() { narrow ? goNext() : goPrev(); }   // di HP, ketuk halaman = maju
+
+/* Tampilan */
+function render() {
+  const f = Math.floor(p / 2);                         // jumlah lembar yang sudah dibalik
+  leafEls.forEach((leaf, idx) => {
+    const i = idx + 1, flipped = i <= f;
+    leaf.style.transform = 'rotateY(' + (flipped ? -180 : 0) + 'deg)';
+    leaf.style.zIndex = flipped ? i : LEAVES + 5 - i;
+  });
+  let shift = 0;
+  if (narrow) shift = p % 2 === 1 ? -50 : 0;
+  else if (p === 1) shift = -25;                       // sampul di tengah
+  else if (p === TOTAL && TOTAL % 2 === 0) shift = 25; // halaman terakhir di tengah
+  book.style.transform = 'translateX(' + shift + '%)';
+
+  const vis = (pg) => (narrow ? pg === p : pg === 2 * f || pg === 2 * f + 1);
+  [...$('dots').children].forEach((d, idx) => d.classList.toggle('on', vis(idx + 1)));
+  $('counter').textContent = (narrow || p === 1 || p === TOTAL)
+    ? 'Halaman ' + p + ' dari ' + TOTAL
+    : 'Halaman ' + 2 * f + '–' + (2 * f + 1) + ' dari ' + TOTAL;
+  $('prev').disabled = p <= 1;
+  $('next').disabled = p >= TOTAL;
+  wrap.classList.toggle('narrow', narrow);
+}
+
+$('next').addEventListener('click', goNext);
+$('prev').addEventListener('click', goPrev);
+
+/* Keyboard: panah kiri/kanan */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') goNext();
+  if (e.key === 'ArrowLeft') goPrev();
+});
+
+/* Geser (swipe) di layar sentuh */
+let sx = null;
+wrap.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+wrap.addEventListener('touchend', (e) => {
+  if (sx === null) return;
+  const dx = e.changedTouches[0].clientX - sx; sx = null;
+  if (dx < -40) goNext(); else if (dx > 40) goPrev();
+});
+
+/* Ganti mode saat ukuran layar berubah */
+window.addEventListener('resize', () => {
+  const n = window.innerWidth < 720;
+  if (n !== narrow) { narrow = n; render(); }
+});
+
+render();
+</script>
+</body>
+</html>
